@@ -12,6 +12,13 @@ namespace pixel_shader_palette_test_1
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+
+        private Texture2D tileTexture;
+        private Texture2D paletTexture;
+
+        private Effect effect;
+
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -40,7 +47,11 @@ namespace pixel_shader_palette_test_1
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            tileTexture = Content.Load<Texture2D>("tile");
+            paletTexture = Content.Load<Texture2D>("palette");
+
+            effect = Content.Load<Effect>("PaletteMapperEffect");
+
         }
 
         /// <summary>
@@ -75,7 +86,13 @@ namespace pixel_shader_palette_test_1
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            effect.CurrentTechnique.Passes[0].Apply();
+
+            spriteBatch.Draw(tileTexture, new Vector2(0, 0), Color.White);
+
+            spriteBatch.End();
+
 
             base.Draw(gameTime);
         }
