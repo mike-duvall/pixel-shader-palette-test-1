@@ -87,11 +87,10 @@ namespace pixel_shader_palette_test_1
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            effect.Parameters["TextureB"].SetValue(paletTexture);
+            effect.Parameters["PaletteTexture"].SetValue(paletTexture);
             effect.CurrentTechnique.Passes[0].Apply();
 
             spriteBatch.Draw(tileTexture, new Vector2(0, 0), Color.White);
-//            spriteBatch.Draw(paletTexture, new Vector2(0, 0), Color.White);
 
             spriteBatch.End();
 

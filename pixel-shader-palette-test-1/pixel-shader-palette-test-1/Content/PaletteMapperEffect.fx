@@ -8,22 +8,16 @@
 #endif
 
 Texture2D SpriteTexture;
-sampler s0;
-float epsilon = 0.0000001f;
-
-
-sampler palette;
-
 sampler2D SpriteTextureSampler = sampler_state
 {
 	Texture = <SpriteTexture>;
 };
 
 
-Texture2D TextureB;
-sampler2D TextureSamplerB = sampler_state
+Texture2D PaletteTexture;
+sampler2D PaletteTextureSampler = sampler_state
 {
-    Texture = <TextureB>;
+    Texture = <PaletteTexture>;
 	addressU = Clamp;
 	addressV = Clamp;
 	mipfilter = NONE;
@@ -40,60 +34,21 @@ struct VertexShaderOutput
 };
 
 
-// bool colorMatches(float4 color, float red, float green, float blue) 
-// {
-// 	float normalizedRed = red / 255.0f;
-// 	float normalizedGreen = green / 255.0f;
-// 	float normalizedBlue = blue / 255.0f;
-
-// 	float difRed = abs(color.r - normalizedRed);
-// 	float difGreen = abs(color.g - normalizedGreen);	
-// 	float difBlue = abs(color.b - normalizedBlue);	
-
-// 	bool matches = false;
-// 	if(color.a && difRed < epsilon && difGreen < epsilon && difBlue < epsilon)
-// 		matches = true;
-
-// 	return matches;
-
-// }
-
-
-bool colorMatches(float4 color, float red, float green, float blue) 
-{
-	float normalizedRed = color.r *  255.0f;
-	// float normalizedGreen = color.g * 255.0f;
-	// float normalizedBlue = color.b * 255.0f;
-
-	// float difRed = abs(color.r - normalizedRed);
-	// float difGreen = abs(color.g - normalizedGreen);	
-	// float difBlue = abs(color.b - normalizedBlue);	
-
-	bool matches = false;
-	// if(color.a && difRed < epsilon && difGreen < epsilon && difBlue < epsilon)
-	// 	matches = true;
-	if( normalizedRed == red) 
-		matches = true;
-
-	return matches;
-
-}
-
 
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
-	float4 color = tex2D(s0, input.TextureCoordinates);
-//	int index = color.r * 255.0f;
-//	int index = color.r;
-	float index = (color.r * 255.0f) / 4.0f;
-//	float2 paletteCoordinates = float2(0.70f, 0.5f);
-	float2 paletteCoordinates = float2(index, 0.5f);
-	// float2 paletteCoordinates = input.TextureCoordinates;
+	float4 color = tex2D(SpriteTextureSampler, input.TextureCoordinates);
+	if(color.a) {
+		int numPaletteEntries = 4.0f;
+		float paletteIndex = (color.r * 255.0f) / numPaletteEntries;
+		float2 paletteCoordinates = float2(paletteIndex, 0.5f);
 
-    float4 paletteColor = tex2D(TextureSamplerB, paletteCoordinates);
-    //return paletteColor;
-    return float4(paletteColor.r, paletteColor.g, paletteColor.b, color.a);
+	    float4 paletteColor = tex2D(PaletteTextureSampler, paletteCoordinates);
+	    return paletteColor;
+	}
+
+	return color;
 
 	// if(color.a && colorMatches(color, 0,0,0))
 	// {
