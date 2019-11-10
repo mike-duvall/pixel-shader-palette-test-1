@@ -11,10 +11,26 @@ Texture2D SpriteTexture;
 sampler s0;
 float epsilon = 0.0000001f;
 
+
+sampler palette;
+
 sampler2D SpriteTextureSampler = sampler_state
 {
 	Texture = <SpriteTexture>;
 };
+
+
+Texture2D TextureB;
+sampler2D TextureSamplerB = sampler_state
+{
+    Texture = <TextureB>;
+	addressU = Clamp;
+	addressV = Clamp;
+	mipfilter = NONE;
+	minfilter = POINT;
+	magfilter = POINT;    
+};
+
 
 struct VertexShaderOutput
 {
@@ -68,34 +84,41 @@ bool colorMatches(float4 color, float red, float green, float blue)
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
 	float4 color = tex2D(s0, input.TextureCoordinates);
+	// int index = color.r * 255.0f;
+	float2 paletteCoordinates = float2(0.70f, 0.5f);
+	// float2 paletteCoordinates = input.TextureCoordinates;
 
-	if(color.a && colorMatches(color, 0,0,0))
-	{
-		color.r = 117.0f / 255.0f;
-		color.g = 137.0f / 255.0f;
-		color.b = 255.0f / 255.0f;
-	}
-	if(color.a && colorMatches(color, 1,0,0))
-	{
-		color.r = 255.0f / 255.0f;
-		color.g = 109.0f / 255.0f;
-		color.b = 145.0f / 255.0f;
-	}
-	if(color.a && colorMatches(color, 2,0,0))
-	{
-		color.r = 251.0f / 255.0f;
-		color.g = 255.0f / 255.0f;
-		color.b = 175.0f / 255.0f;
-	}
-	if(color.a && colorMatches(color, 3,0,0))
-	{
-		color.r = 96.0f / 255.0f;
-		color.g = 255.0f / 255.0f;
-		color.b = 128.0f / 255.0f;
-	}
+    float4 paletteColor = tex2D(TextureSamplerB, paletteCoordinates);
+    //return paletteColor;
+    return float4(paletteColor.r, paletteColor.g, paletteColor.b, color.a);
+
+	// if(color.a && colorMatches(color, 0,0,0))
+	// {
+	// 	color.r = 117.0f / 255.0f;
+	// 	color.g = 137.0f / 255.0f;
+	// 	color.b = 255.0f / 255.0f;
+	// }
+	// if(color.a && colorMatches(color, 1,0,0))
+	// {
+	// 	color.r = 255.0f / 255.0f;
+	// 	color.g = 109.0f / 255.0f;
+	// 	color.b = 145.0f / 255.0f;
+	// }
+	// if(color.a && colorMatches(color, 2,0,0))
+	// {
+	// 	color.r = 251.0f / 255.0f;
+	// 	color.g = 255.0f / 255.0f;
+	// 	color.b = 175.0f / 255.0f;
+	// }
+	// if(color.a && colorMatches(color, 3,0,0))
+	// {
+	// 	color.r = 96.0f / 255.0f;
+	// 	color.g = 255.0f / 255.0f;
+	// 	color.b = 128.0f / 255.0f;
+	// }
 
 	
-  	return color;
+ //  	return color;
 
 }
 

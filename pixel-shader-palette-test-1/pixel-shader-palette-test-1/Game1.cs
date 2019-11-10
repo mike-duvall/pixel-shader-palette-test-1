@@ -87,11 +87,19 @@ namespace pixel_shader_palette_test_1
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            effect.Parameters["TextureB"].SetValue(paletTexture);
             effect.CurrentTechnique.Passes[0].Apply();
 
             spriteBatch.Draw(tileTexture, new Vector2(0, 0), Color.White);
+//            spriteBatch.Draw(paletTexture, new Vector2(0, 0), Color.White);
 
             spriteBatch.End();
+
+//            Pickup here:
+//            Think this link may be describing my issue:  https://gamedev.stackexchange.com/questions/130155/hlsl-texture-sampler-always-returns-white
+//            Also:
+//            http://community.monogame.net/t/order-of-tex2d-in-shader/8720
+//            https://github.com/MonoGame/MonoGame/issues/6490
 
 
             base.Draw(gameTime);
