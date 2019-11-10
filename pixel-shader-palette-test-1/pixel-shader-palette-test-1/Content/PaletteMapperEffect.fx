@@ -84,8 +84,11 @@ bool colorMatches(float4 color, float red, float green, float blue)
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
 	float4 color = tex2D(s0, input.TextureCoordinates);
-	// int index = color.r * 255.0f;
-	float2 paletteCoordinates = float2(0.70f, 0.5f);
+//	int index = color.r * 255.0f;
+//	int index = color.r;
+	float index = (color.r * 255.0f) / 4.0f;
+//	float2 paletteCoordinates = float2(0.70f, 0.5f);
+	float2 paletteCoordinates = float2(index, 0.5f);
 	// float2 paletteCoordinates = input.TextureCoordinates;
 
     float4 paletteColor = tex2D(TextureSamplerB, paletteCoordinates);
